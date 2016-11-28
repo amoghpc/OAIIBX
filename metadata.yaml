@@ -1,0 +1,8 @@
+
+subordinate: false
+requires:
+  epc:
+    interface: S1-C
+  rrh:
+    interface : FH-ETH
+    optional: true

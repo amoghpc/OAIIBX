@@ -1,0 +1,5 @@
+
+
+set -eux
+#$IITH_CHARM_DIR/hooks/upgrade-charm
+#$IITH_CHARM_DIR/hooks/config-changed

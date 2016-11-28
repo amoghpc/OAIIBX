@@ -1,0 +1,18 @@
+
+set -eux
+
+source $IITH_CHARM_DIR/utils/common
+
+if [ ! -z "$(relation-ids epc)" ]; then
+   
+   service oaieNB restart || service oaieNB start
+   check_oaieNB_process
+   if [ $status -eq 1 ]; then
+       juju-log "Trouble with OAIENB upstart file...try to upgrade the charm"
+       status-set blocked "Trouble with OAIENB upstart file...try to upgrade the charm"
+       exit 1
+   fi 
+   #check connection with MME   check_oaieNB_connection 
+
+fi
+

@@ -1,0 +1,23 @@
+
+set -eux
+source $IITH_CHARM_DIR/utils/common
+set_env_paths
+file_config=`cat $IITH_CHARM_DIR/.config_file`
+
+juju-log "stopping eNB service and waiting for a EPC relation to be restablished"
+service oaieNB stop || true
+
+#I can remove from Hss the entry of the IMSI in the case we put from here and not from 
+#PHPOMYADMIN
+#I could remove mnc mcc tai and mme_address from the config file
+
+juju-log "Deleting EPC relation info from the config file in use"
+rm -f $IITH_CHARM_DIR/.epc_running
+rm -f $IITH_CHARM_DIR/.trigger_restart
+sed -r -i  "s/(mobile_country_code[ ]*=[ ]*)\"[0-9]*\"/\1\"0\"/" $conf_path/$file_config
+sed -r -i  "s/(mobile_network_code[ ]*=[ ]*)\"[0-9]*\"/\1\"0\"/" $conf_path/$file_config
+#sed -r -i "/mme_ip_address/ s-\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\"-\"0.0.0.0\"-" $conf_path/$file_config
+mmeipv4=`relation-get mme_ip`
+remove_mme_ip $mmeipv4
+
+status-set blocked "Waiting for EPC relation"

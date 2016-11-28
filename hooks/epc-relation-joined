@@ -1,0 +1,6 @@
+
+set -eux
+
+juju-log "Setting up relation settings for EPC charm"
+relation-set TAC=`config-get TAC`
+
